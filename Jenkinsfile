@@ -7,6 +7,13 @@ pipeline {
     agent any
     stages {
 
+        stage("Alumnos nocturnos sin Gitflow"){
+            steps {
+                script {
+                sh "echo 'Welcome alumnos CERES!'"
+            }
+        }
+
         stage("Paso 1: Compilar"){
             steps {
                 script {
