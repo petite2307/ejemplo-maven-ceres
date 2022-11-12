@@ -1,57 +1,31 @@
-import groovy.json.JsonSlurperClassic
-
-def jsonParse(def json) {
-    new groovy.json.JsonSlurperClassic().parseText(json)
-}
 pipeline {
     agent any
+
     stages {
-
-        stage("Alumnos nocturnos sin Gitflow"){
+        stage('Compile Code') {
             steps {
-                script {
-                sh "echo 'Welcome alumnos CERES!'"
+                sh "./mvnw.cmd clean compile -e"
             }
         }
-
-        stage("Paso 1: Compilar"){
+        stage('Test Code') {
             steps {
-                script {
-                sh "echo 'Compile Code!'"
-                // Run Maven on a Unix agent.
-                sh "./mvnw clean compile -e"
-                }
+                sh "./mvnw.cmd clean test -e"
             }
         }
-        stage("Paso 2: Testear"){
+        stage('Jar Code') {
             steps {
-                script {
-                sh "echo 'Test Code!'"
-                // Run Maven on a Unix agent.
-                sh "./mvnw clean test -e"
-                }
+                sh "./mvnw.cmd clean package -e"
             }
         }
-        stage("Paso 3: Build .Jar"){
+        stage('Run Jar') {
             steps {
-                script {
-                sh "echo 'Build .Jar!'"
-                // Run Maven on a Unix agent.
-                sh "./mvnw clean package -e"
-                }
+                sh "nohup bash mvnw.cmd spring-boot:run &"
             }
         }
-    }
-    post {
-        always {
-            sh "echo 'fase always executed post'"
-        }
-        success {
-            sh "echo 'fase success'"
-        }
-
-        failure {
-            sh "echo 'fase failure'"
+        stage('Good Bye') {
+            steps {
+                echo 'Good Bye Usach Ceres'
+            }
         }
     }
 }
