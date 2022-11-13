@@ -1,31 +1,29 @@
+import groovy.json.JsonSlurperClassic
+
+def jsonParse(def json) {
+    new groovy.json.JsonSlurperClassic().parseText(json)
+}
 pipeline {
     agent any
-
     stages {
-        stage('Compile Code') {
+
+        stage("Paso 1: Saludar"){
             steps {
-                sh "./mvnw clean compile -e"
+                script {
+                sh "echo 'Hello World Webhook!'"
             }
         }
-        stage('Test Code') {
-            steps {
-                sh "./mvnw clean test -e"
-            }
+    }
+    post {
+        always {
+            sh "echo 'fase always executed post'"
         }
-        stage('Jar Code') {
-            steps {
-                sh "./mvnw clean package -e"
-            }
+        success {
+            sh "echo 'fase success'"
         }
-        stage('Run Jar') {
-            steps {
-                sh "nohup bash mvnw spring-boot:run &"
-            }
-        }
-        stage('Good Bye') {
-            steps {
-                echo 'Good Bye Usach Ceres'
-            }
+
+        failure {
+            sh "echo 'fase failure'"
         }
     }
 }
