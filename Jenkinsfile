@@ -22,6 +22,7 @@ pipeline {
             }
         }
     }
+    }
     post {
         always {
             sh "echo 'fase always executed post'"
@@ -33,5 +34,4 @@ pipeline {
             sh "echo 'fase failure'"
         }
     }
-}
 }
