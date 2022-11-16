@@ -13,11 +13,12 @@ pipeline {
                 }
             }
         }
-        stage("Sonar: Análisis SonarQube"){
+        stage("'Test Sonar"){
             steps {
-                sh "echo 'Calling sonar Service in another docker container!'"
-                // Run Maven on a Unix agent to execute Sonar.
-                sh './mvnw clean verify sonar:sonar'
+                withSonarQubeEnv('sonarqube') {
+                    sh "echo 'Calling sonar Service in another docker container!'"
+                    // Run Maven on a Unix agent to execute Sonar.
+                    sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=custom-project-key'
             }
         }
     }
