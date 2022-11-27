@@ -1,34 +1,55 @@
 import groovy.json.JsonSlurperClassic
 
+import groovy.json.JsonSlurperClassic
+
 def jsonParse(def json) {
     new groovy.json.JsonSlurperClassic().parseText(json)
 }
 pipeline {
     agent any
     stages {
-        stage("Paso 1: Compliar"){
+        stage("Paso 1: Compilar"){
             steps {
                 script {
+                env.STAGE='Compilar'
                 sh "echo 'Compile Code!'"
-                // Run Maven on a Unix agent.
-                sh "./mvnw clean compile -e"
+                sh "./mvn clean compile -e"
+                }
+            }
+            post{
+                success {
+                    slackSend color: 'good', message: "Maritza Cornejo - Ejecucion exitosa en ${env.JOB_NAME}"
+
+                }
+                failure{
+                    slackSend color: 'danger', message: "Maritza Cornejo - Ejecucion fallida en stage ${env.STAGE}"
                 }
             }
         }
         stage("Paso 2: Testear"){
             steps {
                 script {
+                env.STAGE='Testear'
                 sh "echo 'Test Code!'"
-                // Run Maven on a Unix agent.
                 sh "./mvnw clean test -e"
                 }
             }
+			post{
+                success {
+                    slackSend color: 'good', message: "Maritza Cornejo - Ejecucion exitosa en ${env.JOB_NAME}"
+
+                }
+                failure{
+                    slackSend color: 'danger', message: "Maritza Cornejo - Ejecucion fallida en stage [${env.STAGE}"
+                }
+            }
         }
+        
         stage("Paso 3: Build .Jar"){
             steps {
                 script {
+                env.STAGE='Build .Jar'
                 sh "echo 'Build .Jar!'"
-                // Run Maven on a Unix agent.
                 sh "./mvnw clean package -e"
                 }
             }
@@ -36,29 +57,36 @@ pipeline {
                 //record the test results and archive the jar file.
                 success {
                     archiveArtifacts artifacts:'build/*.jar'
+                    slackSend color: 'good', message: "Maritza Cornejo - Ejecucion exitosa en ${env.JOB_NAME}"
+                }
+                
+                failure{
+                    slackSend color: 'danger', message: "Maritza Cornejo - Ejecucion fallida en stage [${env.STAGE}"
                 }
             }
         }
         stage("Paso 4: Análisis SonarQube"){
             steps {
+                script {
+                env.STAGE='Analisis Sonar'
+                
                 withSonarQubeEnv('sonarqube') {
                     sh "echo 'Calling sonar Service in another docker container!'"
                     // Run Maven on a Unix agent to execute Sonar.
                     sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=custom-project-key'
                 }
+                    
+                }
             }
-        }
-    }
-    post {
-        always {
-            sh "echo 'fase always executed post'"
-        }
-        success {
-            sh "echo 'fase success'"
-        }
+             post{
+                success {
+                    slackSend color: 'good', message: "Maritza Cornejo - Ejecucion exitosa en ${env.JOB_NAME}"
 
-        failure {
-            sh "echo 'fase failure'"
+                }
+                failure{
+                    slackSend color: 'danger', message: "Maritza Cornejo - Ejecucion fallida en stage [${env.STAGE}"
+                }
+            }
         }
     }
 }
