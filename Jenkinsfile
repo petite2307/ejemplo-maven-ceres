@@ -1,7 +1,5 @@
 import groovy.json.JsonSlurperClassic
 
-import groovy.json.JsonSlurperClassic
-
 def jsonParse(def json) {
     new groovy.json.JsonSlurperClassic().parseText(json)
 }
@@ -73,7 +71,7 @@ pipeline {
                 withSonarQubeEnv('sonarqube') {
                     sh "echo 'Calling sonar Service in another docker container!'"
                     // Run Maven on a Unix agent to execute Sonar.
-                    sh './mvn clean verify sonar:sonar -Dsonar.projectKey=custom-project-key'
+                    sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=custom-project-key'
                 }
                     
                 }
