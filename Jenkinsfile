@@ -18,11 +18,11 @@ pipeline {
             }
             post{
                 success {
-                    slackSend color: 'good', message: "Maritza Cornejo - Ejecucion exitosa en ${env.JOB_NAME}"
+                    slackSend color: 'good', message: "Maritza Cornejo - ${env.JOB_NAME} - Ejecucion exitosa"
 
                 }
                 failure{
-                    slackSend color: 'danger', message: "Maritza Cornejo - Ejecucion fallida en stage ${env.STAGE}"
+                    slackSend color: 'danger', message: "Maritza Cornejo - ${env.JOB_NAME} - Ejecucion fallida en stage ${env.STAGE}"
                 }
             }
         }
@@ -36,11 +36,11 @@ pipeline {
             }
 			post{
                 success {
-                    slackSend color: 'good', message: "Maritza Cornejo - Ejecucion exitosa en ${env.JOB_NAME}"
+                    slackSend color: 'good', message: "Maritza Cornejo - ${env.JOB_NAME} - Ejecucion exitosa"
 
                 }
                 failure{
-                    slackSend color: 'danger', message: "Maritza Cornejo - Ejecucion fallida en stage [${env.STAGE}"
+                    slackSend color: 'danger', message: "Maritza Cornejo - ${env.JOB_NAME} - Ejecucion fallida en stage ${env.STAGE}"
                 }
             }
         }
@@ -57,11 +57,11 @@ pipeline {
                 //record the test results and archive the jar file.
                 success {
                     archiveArtifacts artifacts:'build/*.jar'
-                    slackSend color: 'good', message: "Maritza Cornejo - Ejecucion exitosa en ${env.JOB_NAME}"
+                    slackSend color: 'good', message: "Maritza Cornejo - ${env.JOB_NAME} - Ejecucion exitosa"
                 }
                 
                 failure{
-                    slackSend color: 'danger', message: "Maritza Cornejo - Ejecucion fallida en stage [${env.STAGE}"
+                     slackSend color: 'danger', message: "Maritza Cornejo - ${env.JOB_NAME} - Ejecucion fallida en stage ${env.STAGE}"
                 }
             }
         }
@@ -80,11 +80,11 @@ pipeline {
             }
              post{
                 success {
-                    slackSend color: 'good', message: "Maritza Cornejo - Ejecucion exitosa en ${env.JOB_NAME}"
+                    slackSend color: 'good', message: "Maritza Cornejo - ${env.JOB_NAME} - Ejecucion exitosa"
 
                 }
                 failure{
-                    slackSend color: 'danger', message: "Maritza Cornejo - Ejecucion fallida en stage [${env.STAGE}"
+                    slackSend color: 'danger', message: "Maritza Cornejo - ${env.JOB_NAME} - Ejecucion fallida en stage ${env.STAGE}"
                 }
             }
         }
