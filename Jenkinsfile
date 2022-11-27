@@ -13,7 +13,7 @@ pipeline {
                 script {
                 env.STAGE='Compilar'
                 sh "echo 'Compile Code!'"
-                sh "./mvn clean compile -e"
+                sh "./mvnw clean compile -e"
                 }
             }
             post{
