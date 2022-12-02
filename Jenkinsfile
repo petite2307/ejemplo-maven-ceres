@@ -47,6 +47,7 @@ pipeline {
                     
                 }
             }
+        }
         stage("Paso 5: Testeo con Newman"){
             steps {
                 script{
