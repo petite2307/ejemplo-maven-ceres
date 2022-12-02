@@ -34,24 +34,31 @@ pipeline {
                 }
             }
         }
-        stage("Paso 4: Análisis SonarQube"){
+        stage("Paso 4: Springboot maven sleep 20"){
             steps {
-                script {
-                env.STAGE='Analisis Sonar'
-                
-                withSonarQubeEnv('sonarqube') {
-                    sh "echo 'Calling sonar Service in another docker container!'"
-                    // Run Maven on a Unix agent to execute Sonar.
-                    sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=custom-project-key'
-                }
-                    
+                script{
+                    sh "nohup bash ./mvnw spring-boot:run  & >/dev/null"
+                    //sh "sleep 20 && curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
                 }
             }
         }
-        stage("Paso 5: Testeo con Newman"){
+
+         stage("Paso 5: Testeo con Newman"){
             steps {
                 script{
                     sh "sleep 20 && newman run /tmp/ejemplo-maven.postman_collection.json"
+                }
+            }
+        }
+
+        stage("Paso 5: Detener Spring Boot"){
+            steps {
+                script{
+                    sh '''
+                        echo 'Process Spring Boot Java: ' $(pidof java | awk '{print $1}')  
+                        sleep 20
+                        kill -9 $(pidof java | awk '{print $1}')
+                    '''
                 }
             }
         }
