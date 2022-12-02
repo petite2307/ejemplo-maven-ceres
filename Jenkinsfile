@@ -46,7 +46,7 @@ pipeline {
          stage("Paso 5: Testeo con Newman"){
             steps {
                 script{
-                    sh "sleep 20 && newman run /tmp/ejemplo-maven.postman_collection.json"
+                    sh "sleep 20 && newman run ejemplo-maven.postman_collection.json"
                 }
             }
         }
