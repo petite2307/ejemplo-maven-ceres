@@ -14,15 +14,6 @@ pipeline {
                 sh "./mvnw clean compile -e"
                 }
             }
-            post{
-                success {
-                    slackSend color: 'good', message: "Maritza Cornejo - ${env.JOB_NAME} - Ejecucion exitosa"
-
-                }
-                failure{
-                    slackSend color: 'danger', message: "Maritza Cornejo - ${env.JOB_NAME} - Ejecucion fallida en stage ${env.STAGE}"
-                }
-            }
         }
         stage("Paso 2: Testear"){
             steps {
@@ -30,15 +21,6 @@ pipeline {
                 env.STAGE='Testear'
                 sh "echo 'Test Code!'"
                 sh "./mvnw clean test -e"
-                }
-            }
-			post{
-                success {
-                    slackSend color: 'good', message: "Maritza Cornejo - ${env.JOB_NAME} - Ejecucion exitosa"
-
-                }
-                failure{
-                    slackSend color: 'danger', message: "Maritza Cornejo - ${env.JOB_NAME} - Ejecucion fallida en stage ${env.STAGE}"
                 }
             }
         }
@@ -49,17 +31,6 @@ pipeline {
                 env.STAGE='Build .Jar'
                 sh "echo 'Build .Jar!'"
                 sh "./mvnw clean package -e"
-                }
-            }
-            post {
-                //record the test results and archive the jar file.
-                success {
-                    archiveArtifacts artifacts:'build/*.jar'
-                    slackSend color: 'good', message: "Maritza Cornejo - ${env.JOB_NAME} - Ejecucion exitosa"
-                }
-                
-                failure{
-                     slackSend color: 'danger', message: "Maritza Cornejo - ${env.JOB_NAME} - Ejecucion fallida en stage ${env.STAGE}"
                 }
             }
         }
@@ -76,13 +47,10 @@ pipeline {
                     
                 }
             }
-             post{
-                success {
-                    slackSend color: 'good', message: "Maritza Cornejo - ${env.JOB_NAME} - Ejecucion exitosa"
-
-                }
-                failure{
-                    slackSend color: 'danger', message: "Maritza Cornejo - ${env.JOB_NAME} - Ejecucion fallida en stage ${env.STAGE}"
+        stage("Paso 5: Testeo con Newman"){
+            steps {
+                script{
+                    sh "sleep 20 && newman run /tmp/ejemplo-maven.postman_collection.json"
                 }
             }
         }
